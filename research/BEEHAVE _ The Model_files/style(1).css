@@ -1,0 +1,44 @@
+/*
+Theme Name:     Divi-Child
+Description:    child 1 theme 
+Author:         Grace Twiston-Davies
+Template:       Divi
+
+(optional values you can add: Theme URI, Author URI, Version, License, License URI, Tags, Text Domain)
+*/
+
+p {
+font-family:'Poppins', sans-serif;
+}
+
+#main-header {
+border-bottom: 15px solid #26303f;
+    }
+
+
+.et_fullwidth_nav #main-header .container {
+    width: auto;
+    max-width: auto;
+padding-right: 0px;
+padding-left: 0px;
+}
+
+#et-top-navigation {
+background-color: #ffde16;
+width: auto;
+}
+
+#top-menu.nav {
+padding-top: 20px;
+}
+
+#top-menu.nav a:hover { 
+    color: #69ccb0 !important;
+}
+
+#disclaimer {
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
+
