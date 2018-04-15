@@ -1,4 +1,11 @@
-#include<string>
+//bee_model.h
+
+#ifndef __BEEMODEL_H__
+#define __BEEMODEL_H__
+
+#include <string>
+
+#define DAYS_IN_YEAR (365)
 
 namespace My {
 
@@ -76,6 +83,35 @@ namespace My {
 			int invadedDroneCohortID = 0;
 			int invadedWorkerCohortID = 0;
 		};
-	}
 
-}
+		struct model_data {
+			unsigned short day_number = 1;//from 1 to DAYS_IN_YEAR
+
+			model_data(const model_data&) = default;
+			model_data(model_data&&) = default;
+			model_data& operator=(const model_data&) = default;
+			model_data& operator=(model_data&&) = default;
+
+			model_data create_sample();
+		};
+
+		struct internal_model_data;
+
+		struct model {
+			//sets sample model_data
+			model();
+			model(model_data data);
+			~model();
+
+			const model_data& get_data();
+
+			daily_step();
+		private:
+			internal_model_data* idata;
+		};
+
+	} // namespace BeeModel
+
+} // namespace My
+
+#endif // __BEEMODEL_H__
