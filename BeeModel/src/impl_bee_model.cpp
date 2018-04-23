@@ -17,7 +17,7 @@ namespace My {
 		namespace Impl {
 
 			bool verify_data(const model_data& data, const char*& info) {
-				if (data.day_number > DAYS_IN_YEAR) {
+				if (data.day_number > DAYS_IN_YEAR || data.day_number < 1) {
 					info = "day_number";
 					return false;
 				}
@@ -26,6 +26,13 @@ namespace My {
 			}
 
 			namespace {
+				void daily_update_proc() {
+					day_number = (day_number + 1) % DAYS_IN_YEAR;
+					if(day_number == 0) {
+						day_number = DAYS_IN_YEAR;
+					}
+				}
+
 				/*
 				DailyUpdateProc
 				SeasonProc_HoPoMo

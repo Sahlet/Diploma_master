@@ -7,7 +7,7 @@ namespace My {
 
 	namespace BeeModel {
 
-		model::model() : model(model_data::create_sample) {}
+		model::model() : model(model_data::create_sample()) {}
 		model::model(model_data data) {
 			const char* info;
 			if (!Impl::verify_data(data, info)) {
@@ -25,7 +25,7 @@ namespace My {
 		}
 
 		model::daily_step() {
-
+			Impl::daily_step(*idata);
 		}
 
 	} // namespace BeeModel
