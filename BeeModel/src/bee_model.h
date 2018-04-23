@@ -85,7 +85,7 @@ namespace My {
 		};
 
 		struct model_data {
-			unsigned short day_number = 1;//from 1 to DAYS_IN_YEAR
+			unsigned short day_number = 1; //from 1 to DAYS_IN_YEAR
 
 			model_data(const model_data&) = default;
 			model_data(model_data&&) = default;
