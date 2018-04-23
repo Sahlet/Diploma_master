@@ -27,9 +27,9 @@ namespace My {
 
 			namespace {
 				void daily_update_proc() {
-					day_number = (day_number + 1) % DAYS_IN_YEAR;
-					if(day_number == 0) {
-						day_number = DAYS_IN_YEAR;
+					day_number++;
+					if(day_number > DAYS_IN_YEAR) {
+						day_number %= DAYS_IN_YEAR;
 					}
 				}
 
