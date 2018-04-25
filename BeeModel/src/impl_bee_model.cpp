@@ -26,11 +26,16 @@ namespace My {
 			}
 
 			namespace {
-				void daily_update_proc() {
-					day_number++;
-					if(day_number > DAYS_IN_YEAR) {
-						day_number %= DAYS_IN_YEAR;
-					}
+				void daily_update_proc(internal_model_data& data) {
+					data.day_number = ticks % DAYS_IN_YEAR;
+					data.DeathsAdultWorkers_t = 0;
+  					data.SumLifeSpanAdultWorkers_t = 0;
+  					data.DailyMiteFall = 0;
+  					data.Pupae_W&D_KilledByVirusToday = 0;
+  					data.NewReleasedMitesToday = 0;
+    					// all (healthy and infected) mites released from cells (mothers+offspring)
+    					// on current day (calculated after MiteFall!)
+
 				}
 
 				/*
@@ -71,7 +76,8 @@ namespace My {
 			} // namespace
 
 			void daily_step(internal_model_data& data) {
-
+				ticks++;
+				daily_update_proc(data);
 			}
 
 		} // namespace Impl
