@@ -16,7 +16,6 @@ namespace My {
 			int AFF = 0;
 			int AFF_BASE = 0;
 			int AllDaysAllPatchesList = 0;
-			int BugAlarm = 0;
 			int ColonyDied = 0;
 			int ColonyTripDurationSum = 0;
 			int ColonyTripForagersSum = 0;

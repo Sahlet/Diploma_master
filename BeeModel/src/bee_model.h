@@ -4,6 +4,7 @@
 #define __BEEMODEL_H__
 
 #include <string>
+#include <list>
 
 #define DAYS_IN_YEAR (365)
 
@@ -85,6 +86,9 @@ namespace My {
 		};
 
 		struct model_data {
+			std::list<forager_squadron> forager_squadrons;
+			std::list<flower_patch> flower_patchs;
+
 			unsigned short start_day = 1; //from 1 to DAYS_IN_YEAR //Day
 
 			model_data(const model_data&) = default;

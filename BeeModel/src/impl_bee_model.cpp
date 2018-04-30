@@ -27,14 +27,24 @@ namespace My {
 
 			namespace {
 				void daily_update_proc(internal_model_data& data) {
-					data.day_number = ticks % DAYS_IN_YEAR;
+					data.day_number = (ticks + start_day - 1) % DAYS_IN_YEAR;
 					data.DeathsAdultWorkers_t = 0;
-  					data.SumLifeSpanAdultWorkers_t = 0;
-  					data.DailyMiteFall = 0;
-  					data.Pupae_W&D_KilledByVirusToday = 0;
-  					data.NewReleasedMitesToday = 0;
-    					// all (healthy and infected) mites released from cells (mothers+offspring)
-    					// on current day (calculated after MiteFall!)
+					data.SumLifeSpanAdultWorkers_t = 0;
+					data.DailyMiteFall = 0;
+					data.Pupae_W&D_KilledByVirusToday = 0;
+					data.NewReleasedMitesToday = 0;
+						// all (healthy and infected) mites released from cells (mothers+offspring)
+						// on current day (calculated after MiteFall!)
+
+					for(auto& obj: forager_squadrons) {
+						obj.km_today = 0;
+					}
+
+					set DailyForagingPeriod Foraging_PeriodREP
+					set HoneyEnergyStoreYesterday HoneyEnergyStore
+					set PollenStore_g_Yesterday PollenStore_g
+					set LostBroodToday 0
+					set Queenage Queenage + 1
 
 				}
 
