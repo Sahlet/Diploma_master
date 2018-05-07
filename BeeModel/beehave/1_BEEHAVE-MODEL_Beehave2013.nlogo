@@ -27,11 +27,11 @@ globals [
   ColonyTripForagersSum
   CROPVOLUME
   CumulativeHoneyConsumption
-  DailyForagingPeriod
+  DailyForagingPeriod ;foragingPeriodForToday in c++
   DailyHoneyConsumption
   DailyMiteFall
   DailyPollenConsumption_g
-  Day
+  Day ;date.day in c++
   DeathsAdultWorkers_t
   DeathsForagingToday
   DecentHoneyEnergyStore
@@ -57,7 +57,7 @@ globals [
   HarvestedHoney_kg
   HATCHING_AGE
   HONEY_STORE_INIT
-  HoneyEnergyStore
+  HoneyEnergyStore // honeyEnergyStore in c++
   HoneyEnergyStoreYesterday
   HoPoMo_seasont
   IdealPollenStore_g

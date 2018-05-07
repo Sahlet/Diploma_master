@@ -5,6 +5,7 @@
 
 #include <string>
 #include <list>
+#include <memory>
 
 #define DAYS_IN_YEAR (365)
 
@@ -89,14 +90,22 @@ namespace My {
 			std::list<forager_squadron> forager_squadrons;
 			std::list<flower_patch> flower_patchs;
 
-			unsigned short start_day = 1; //from 1 to DAYS_IN_YEAR //Day
+			struct date_struct {
+				unsigned short year = 2000;
+				unsigned short day = 1; //from 1 to DAYS_IN_YEAR //Day
+
+				void inc();
+			} date; //all other data in model_data object setted for the end of this date (for the evening)
 
 			model_data(const model_data&) = default;
 			model_data(model_data&&) = default;
 			model_data& operator=(const model_data&) = default;
 			model_data& operator=(model_data&&) = default;
 
-			model_data create_sample();
+			static model_data create_sample();
+
+			//Gets Foraging Period For Today (using date field) in seconds
+			virtual int getForagingPeriodForToday();
 		};
 
 		struct internal_model_data;
@@ -104,14 +113,13 @@ namespace My {
 		struct model {
 			//sets sample model_data
 			model();
-			model(model_data data);
-			~model();
+			model(std::shared_ptr<model_data> data);
 
 			const model_data& get_data();
 
 			daily_step();
 		private:
-			internal_model_data* idata;
+			std::unique_ptr<internal_model_data> idata;
 		};
 
 	} // namespace BeeModel
