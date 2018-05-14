@@ -8,8 +8,8 @@ namespace My {
 	namespace BeeModel {
 
 		std::shared_ptr<model_data> model_data::create_sample() {
-			model_data res;
-			res.day_number = 1;
+			auto res = std::make_shared<model_data>();
+			res->day_number = 1;
 
 			return std::move(res);
 		}
@@ -19,6 +19,10 @@ namespace My {
 				year += day / DAYS_IN_YEAR;
 				day = day % DAYS_IN_YEAR;
 			}
+		}
+
+		int model_data::getForagingPeriodForToday() {
+			return (int)(24 * 60 * 60 * 0.45 * -cos(2 * PI * date.day/(float)DAYS_IN_YEAR));
 		}
 
 		namespace Impl {
