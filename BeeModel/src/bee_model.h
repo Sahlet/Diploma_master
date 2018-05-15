@@ -87,15 +87,19 @@ namespace My {
 		};
 
 		struct model_data {
-			std::list<forager_squadron> forager_squadrons;
-			std::list<flower_patch> flower_patchs;
-
 			struct date_struct {
 				unsigned short year = 2000;
 				unsigned short day = 1; //from 1 to DAYS_IN_YEAR //Day
 
 				void inc();
-			} date; //all other data in model_data object setted for the end of this date (for the evening)
+			}
+
+			std::list<forager_squadron> forager_squadrons;
+			std::list<flower_patch> flower_patchs;
+
+			date_struct date; //all other data in model_data object setted for the end of this date (for the evening)
+
+			unsigned Queenage = 1; //in days (min value is 1)
 
 			model_data(const model_data&) = default;
 			model_data(model_data&&) = default;

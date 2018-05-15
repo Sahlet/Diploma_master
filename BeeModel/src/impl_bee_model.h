@@ -21,6 +21,9 @@ namespace My {
 				void daily_step();
 
 			private:
+				void daily_update_proc();
+
+			private:
 				std::shared_ptr<model_data> data;
 
 				unsigned int ticks = 0;
@@ -39,7 +42,6 @@ namespace My {
 				int DailyMiteFall = 0;
 				int DailyPollenConsumption_g = 0;
 				int DeathsAdultWorkers_t = 0;
-				int DeathsForagingToday = 0;
 				int DecentHoneyEnergyStore = 0;
 				int DRONE_EGGLAYING_START = 0;
 				int DRONE_EGGLAYING_STOP = 0;
@@ -49,7 +51,6 @@ namespace My {
 				int DRONE_PUPATION_AGE = 0;
 				int DRONE_EGGS_PROPORTION = 0;
 				int EMERGING_AGE = 0;
-				int EmptyFlightsToday = 0;
 				int ENERGY_HONEY_per_g = 0;
 				int ENERGY_SUCROSE = 0;
 				int ExcessBrood = 0;
@@ -77,9 +78,7 @@ namespace My {
 				int InvadingMitesWorkerCellsReal = 0;
 				int InvadingMitesWorkerCellsTheo = 0;
 				int LIFESPAN = 0;
-				int LostBroodToday = 0;
-					// brood that die due to lack of nursing or lack of pollen today
-				int LostBroodTotal = 0;	// .. and summed up
+				int LostBroodTotal = 0;	// brood that die due to lack of nursing or lack of pollen
 				int MAX_AFF = 0;
 				int MAX_BROOD_NURSE_RATIO = 0;
 				int MAX_DANCE_CIRCUITS = 0;
@@ -109,7 +108,6 @@ namespace My {
 				int MORTALITY_PUPAE = 0;
 				int N_FLOWERPATCHES = 0;
 				int N_GENERIC_PLOTS = 0;
-				int NectarFlightsToday = 0;
 				int NewDroneEggs = 0;
 				int NewDroneLarvae = 0;
 				int NewDronePupae = 0;
@@ -131,10 +129,8 @@ namespace My {
 				int PhoreticMitesHealthyRate = 0;
 				int POLLEN_DANCE_FOLLOWERS = 0;
 				int POLLEN_STORE_INIT = 0;
-				int PollenFlightsToday = 0;
 				int POLLENLOAD = 0;
 				int PollenStore_g = 0; // in [g] (amount of pollen stored in the colony)
-				int PollenStore_g_Yesterday = 0;
 				int POST_SWARMING_PERIOD = 0;
 				int PRE_SWARMING_PERIOD = 0;
 				int ProbPollenCollection = 0;
@@ -144,14 +140,11 @@ namespace My {
 				int Pupae_W&D_KilledByVirusToday = 0;
 					// number of drone + worker pupae that were killed by the virus today
 				int PUPATION_AGE = 0;
-				int Queenage = 0;
-				int RecruitedFlightsToday = 0;
 				int SaveInvadedMODroneLarvaeToPupae = 0;
 				int SaveInvadedMOWorkerLarvaeToPupae = 0;
 				int SaveWhoDroneLarvaeToPupae = 0;
 				int SaveWhoWorkerLarvaeToPupae = 0;
 				int SEARCH_LENGTH_M = 0;
-				int SearchingFlightsToday = 0;
 				int SEASON_START = 0; // defines beginning of foraging period
 				int SEASON_STOP = 0; // end of foraging period & latest end of drone production
 				int SimpleDancing = 0;
@@ -172,7 +165,6 @@ namespace My {
 				int TotalDronePupae = 0;
 				int TotalDrones = 0;
 				int TotalEggs = 0;
-				int TotalEventsToday = 0; // sum of todays "xxxFlightsToday"
 				int TotalForagers = 0;
 				int TotalFPdetectionProb = 0;
 				int TotalHoneyFed_kg = 0;
