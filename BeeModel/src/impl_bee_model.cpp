@@ -21,6 +21,12 @@ namespace My {
 			}
 		}
 
+		void flower_patch::updateDailyData(const date_struct& date) {
+			dailyData = daily_data();
+		    dailyData.quantityMyl = 20 * 1000 * 1000; // must depends on other flower_patch pframeters (area, type)
+		    dailyData.amountPollen_g = 1 * 1000; // must depends on other flower_patch pframeters (area, type)
+		}
+
 		int model_data::getForagingPeriodForToday() {
 			auto part_of_day = 0.45 * -cos(2 * PI * date.day/(float)DAYS_IN_YEAR);
 			if (part_of_day < 0) {
@@ -69,6 +75,10 @@ namespace My {
 
 				foragingPeriodForToday = data->getForagingPeriodForToday();
 				data->Queenage++;
+
+				for (auto& patch : flower_patchs) {
+					patch->updateDailyData(date);
+				}
 
 if ReadInfile = false
   [

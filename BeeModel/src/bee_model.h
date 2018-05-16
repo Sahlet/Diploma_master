@@ -13,6 +13,13 @@ namespace My {
 
 	namespace BeeModel {
 
+		struct date_struct {
+			unsigned short year = 2000;
+			unsigned short day = 1; //from 1 to DAYS_IN_YEAR //Day
+
+			void inc();
+		};
+
 		struct entity {
 			int64_t id = 0;
 			int age = 0;
@@ -51,14 +58,17 @@ namespace My {
 		};
 
 		struct flower_patch : entity {
+			struct daily_data {
+				int quantityMyl = 0; // [μl] microliters; quantity of available nectar on the specified day
+				int amountPollen_g = 0; // [g] grams; quantity of available pollen on the specified day
+			};
+
 			int patchType = 0;
 			int distanceToColony = 0;
 			int xcorMap = 0;
 			int ycorMap = 0;
 			int oldPatchID = 0;
 			int size_sqm = 0;
-			int quantityMyl = 0;
-			int amountPollen_g = 0;
 			int nectarConcFlowerPatch = 0;
 			int detectionProbability = 0;
 			int flightCostsNectar = 0;
@@ -75,6 +85,11 @@ namespace My {
 			int mortalityRiskPollen = 0;
 			int handlingTimeNectar = 0;
 			int handlingTimePollen = 0;
+
+			daily_data dailyData;
+
+			//Updates dailyData field on the specified date
+			virtual void updateDailyData(const date_struct& date);
 		};
 		
 		struct mite_organiser : entity {
@@ -87,15 +102,8 @@ namespace My {
 		};
 
 		struct model_data {
-			struct date_struct {
-				unsigned short year = 2000;
-				unsigned short day = 1; //from 1 to DAYS_IN_YEAR //Day
-
-				void inc();
-			}
-
 			std::list<forager_squadron> forager_squadrons;
-			std::list<flower_patch> flower_patchs;
+			std::list< std::shared_ptr<flower_patch> > flower_patchs;
 
 			date_struct date; //all other data in model_data object setted for the end of this date (for the evening)
 
@@ -110,6 +118,8 @@ namespace My {
 
 			//Gets Foraging Period For Today (using date field) in seconds
 			virtual int getForagingPeriodForToday();
+
+			virtual int FlowerPatchesMaxFoodAvailableTodayREP
 		};
 
 		struct internal_model_data;
