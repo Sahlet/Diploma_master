@@ -8,14 +8,16 @@
 #include <memory>
 
 #define DAYS_IN_YEAR (365)
+typedef unsigned int UINT;
+typedef unsigned short USHORT;
 
 namespace My {
 
 	namespace BeeModel {
 
 		struct date_struct {
-			unsigned short year = 2000;
-			unsigned short day = 1; //from 1 to DAYS_IN_YEAR //Day
+			USHORT year = 2000;
+			USHORT day = 1; //from 1 to DAYS_IN_YEAR //Day
 
 			void inc();
 		};
@@ -59,14 +61,17 @@ namespace My {
 
 		struct flower_patch : entity {
 			struct daily_data {
-				int quantityMyl = 0; // [μl] microliters; quantity of available nectar on the specified day
-				int amountPollen_g = 0; // [g] grams; quantity of available pollen on the specified day
+				UINT quantityMyl = 0; // [μl] microliters; quantity of available nectar on the specified day
+				UINT amountPollen_g = 0; // [g] grams; quantity of available pollen on the specified day
+				UINT nectarVisitsToday = 0; // number of bees collected nectar from that patch today
+				UINT pollenVisitsToday = 0; // number of bees collected pollen from that patch today
+
+				//Updates daily_data on the specified date
+				virtual void update(const date_struct& date);
 			};
 
 			int patchType = 0;
 			int distanceToColony = 0;
-			int xcorMap = 0;
-			int ycorMap = 0;
 			int oldPatchID = 0;
 			int size_sqm = 0;
 			int nectarConcFlowerPatch = 0;
@@ -77,8 +82,6 @@ namespace My {
 			int danceCircuits = 0;
 			int danceFollowersNectar = 0;
 			int summedVisitors = 0;
-			int nectarVisitsToday = 0;
-			int pollenVisitsToday = 0;
 			int tripDuration = 0;
 			int tripDurationPollen = 0;
 			int mortalityRisk = 0;
@@ -86,10 +89,7 @@ namespace My {
 			int handlingTimeNectar = 0;
 			int handlingTimePollen = 0;
 
-			daily_data dailyData;
-
-			//Updates dailyData field on the specified date
-			virtual void updateDailyData(const date_struct& date);
+			std::shared_ptr<daily_data> dailyData;
 		};
 		
 		struct mite_organiser : entity {
@@ -102,12 +102,21 @@ namespace My {
 		};
 
 		struct model_data {
+			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
+
 			std::list<forager_squadron> forager_squadrons;
-			std::list< std::shared_ptr<flower_patch> > flower_patchs;
+			std::list<flower_patch> flower_patchs;
 
-			date_struct date; //all other data in model_data object setted for the end of this date (for the evening)
+			date_struct date; // all other data in model_data object setted for the end of this date (for the evening)
 
-			unsigned Queenage = 1; //in days (min value is 1)
+			unsigned Queenage = 1; // in days (min value is 1)
+			
+			bool colonyDied = false;
+			std::string deathReason;
+
+			UINT TotalForagers = 0; // number of all foragers (bee that collects food) of the colony
+			UINT TotalWorkerAndDroneBrood = 0; // number of all worker and drone eggs, larvae and pupae
+			UINT TotalIHbees = 0; // number of in-hive bees present in the colony
 
 			model_data(const model_data&) = default;
 			model_data(model_data&&) = default;

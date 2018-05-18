@@ -32,7 +32,6 @@ namespace My {
 				int AFF = 0;
 				int AFF_BASE = 0;
 				int AllDaysAllPatchesList = 0;
-				int ColonyDied = 0;
 				int ColonyTripDurationSum = 0;
 				int ColonyTripForagersSum = 0;
 				int CROPVOLUME = 0;
@@ -137,8 +136,7 @@ namespace My {
 				int PropNewToAllPhorMites = 0;
 				int PROTEIN_STORE_NURSES_d = 0;
 				int ProteinFactorNurses = 0;
-				int Pupae_W&D_KilledByVirusToday = 0;
-					// number of drone + worker pupae that were killed by the virus today
+				int Pupae_W&D_KilledByVirusToday = 0; // number of drone + worker pupae that were killed by the virus today
 				int PUPATION_AGE = 0;
 				int SaveInvadedMODroneLarvaeToPupae = 0;
 				int SaveInvadedMOWorkerLarvaeToPupae = 0;
@@ -155,8 +153,6 @@ namespace My {
 				int SwarmingDate = 0;
 				int TIME_UNLOADING = 0;
 				int TIME_UNLOADING_POLLEN = 0;
-				int TodaysAllPatchesList = 0;
-				int TodaysSinglePatchList = 0;
 				int TotalBeesAdded = 0;
 					// beekeeper can add bees in autumn, these are added up as long
 					// as simulation runs
