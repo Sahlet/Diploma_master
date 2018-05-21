@@ -11,8 +11,8 @@ namespace My {
 
 		namespace Impl {
 
-			struct model_impl {
-				model_impl(std::shared_ptr<model_data> data) : data(std::move(data)) {}
+			struct model_impl : public prop_handler {
+				model_impl(std::shared_ptr<model_data> data);
 
 				inline const model_data& get_data() {
 					return *data;
@@ -22,6 +22,7 @@ namespace My {
 
 			private:
 				void daily_update_proc();
+				void clear_on_dead();
 
 			private:
 				std::shared_ptr<model_data> data;

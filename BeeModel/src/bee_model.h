@@ -7,6 +7,8 @@
 #include <list>
 #include <memory>
 
+#include <My/Properties.h>
+
 #define DAYS_IN_YEAR (365)
 typedef unsigned int UINT;
 typedef unsigned short USHORT;
@@ -30,6 +32,14 @@ namespace My {
 			int numberDied = 0;
 			int invadedByMiteOrganiserID = 0;
 		};
+
+		struct egg_group : entity {};
+
+		struct egg_drone_group : entity {};
+
+		struct larva_group : entity {};
+
+		struct larva_drone_group : entity {};
 
 		struct base_bee_group : entity {
 			int infectedAsPupa = 0;
@@ -104,6 +114,15 @@ namespace My {
 		struct model_data {
 			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
 
+			std::list<egg_group> egg_groups;
+			std::list<egg_drone_group> egg_drone_groups;
+			std::list<larva_group> larva_groups;
+			std::list<larva_drone_group> larva_drone_groups;
+			std::list<base_bee_group> base_bee_groups;
+			std::list<pupa_group> pupa_groups;
+			std::list<pupa_drone_group> pupa_drone_groups;
+			std::list<drone_group> drone_groups;
+			std::list<in_hive_bee_group> in_hive_bee_groups;
 			std::list<forager_squadron> forager_squadrons;
 			std::list<flower_patch> flower_patchs;
 
@@ -111,10 +130,11 @@ namespace My {
 
 			unsigned Queenage = 1; // in days (min value is 1)
 			
-			bool colonyDied = false;
+			prop<bool> colonyDied;
 			std::string deathReason;
+			bool clearOnDead = false;
 
-			UINT TotalForagers = 0; // number of all foragers (bee that collects food) of the colony
+			UINT TotalForagers = 0; // number of all foragers of the colony
 			UINT TotalWorkerAndDroneBrood = 0; // number of all worker and drone eggs, larvae and pupae
 			UINT TotalIHbees = 0; // number of in-hive bees present in the colony
 

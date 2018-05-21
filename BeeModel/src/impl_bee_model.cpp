@@ -3,6 +3,8 @@
 #include "bee_model.h"
 #include "impl_bee_model.h"
 
+#include <My/Guard.h>
+
 namespace My {
 
 	namespace BeeModel {
@@ -67,6 +69,15 @@ namespace My {
 				return true;
 			}
 
+			model_impl::model_impl(std::shared_ptr<model_data> _data_) : data(std::move(_data_))
+			{
+				if (!data) {
+					throw std::invalid_argument("data is nullpr");
+				}
+
+				data->colonyDied.register_change(this, [this]() { clear_on_dead(); });
+			}
+
 			
 			void model_impl::daily_step() {
 				ticks++;
@@ -111,49 +122,44 @@ namespace My {
 					data->colonyDied = true;
 					return;
 				}
+			}
 
- if ColonyDied = true
- [
-   ask hives [ set color grey ]
-     ; grey colony: died! (even if it "recovers" later, it remains grey)
-
-   if stopDead = true
-   [
-     ask Signs with [shape = "skull"]
-     [
-       show-turtle
-     ]
-   ]
-   ask patches [ set pcolor black ]
-   if stopDead = true
-   [
-     ask eggCohorts [ set number 0]
-     ask larvaeCohorts [ set number 0]
-     ask pupaeCohorts
-     [
-       set number 0
-       set number_Healthy 0
-       set number_infectedAsPupa 0
-     ]
-     ask IHbeeCohorts
-     [
-       set number 0
-       set number_Healthy 0
-       set number_infectedAsPupa 0
-       set number_infectedAsAdult 0
-     ]
-     ask foragerSquadrons [ die ]
-     ask droneEggCohorts [ set number 0]
-     ask droneLarvaeCohorts [ set number 0]
-     ask dronePupaeCohorts
-     [
-       set number 0
-       set number_Healthy 0
-       set number_infectedAsPupa 0
-     ]
-     ask droneCohorts [ set number 0  ]
-   ]
- ]
+			void model_impl::clear_on_dead() {
+				if (data->clearOnDead) {
+					for (auto& group : egg_groups) {
+						group.number = 0;
+					}
+					for (auto& group : larva_groups) {
+						group.number = 0;
+					}
+					for (auto& group : pupa_groups) {
+						group.number = 0;
+						group.healthy = 0;
+						group.infectedAsPupa = 0;
+					}
+					for (auto& group : drone_groups) {
+						group.number = 0;
+						group.healthy = 0;
+						group.infectedAsPupa = 0;
+					}
+					for (auto& group : egg_drone_groups) {
+						group.number = 0;
+					}
+					for (auto& group : larva_drone_groups) {
+						group.number = 0;
+					}
+					for (auto& group : pupa_drone_groups) {
+						group.number = 0;
+						group.healthy = 0;
+						group.infectedAsPupa = 0;
+					}
+					for (auto& group : in_hive_bee_groups) {
+						group.number = 0;
+						group.healthy = 0;
+						group.infectedAsPupa = 0;
+						group.infectedAsAdult = 0;
+					}
+				}
 			}
 
 			/*
