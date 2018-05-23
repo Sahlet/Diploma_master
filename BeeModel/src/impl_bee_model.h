@@ -22,8 +22,10 @@ namespace My {
 
 			private:
 				void daily_update_proc();
-				void clear_on_dead();
 				void season_HoPoMo_proc(); // calculates HoPoMo_seasont factor that influences egg laying rate.
+				void worker_eggs_dev_proc(); // worker eggs ageing, deletion of oldest groups
+
+				void clear_on_dead();
 				static float season_HoPoMo(USHORT day, USHORT parameterList[5] = nullptr);
 
 			private:

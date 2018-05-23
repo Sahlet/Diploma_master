@@ -113,6 +113,7 @@ namespace My {
 
 		struct model_data {
 			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
+			float MORTALITY_EGGS = 0.03; // daily mortality rate of worker eggs
 
 			std::list<egg_group> egg_groups;
 			std::list<egg_drone_group> egg_drone_groups;

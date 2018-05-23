@@ -85,6 +85,7 @@ namespace My {
 				season_HoPoMo_proc();
 
 				//Egg laying & development:
+				worker_eggs_dev_proc();
 			}
 
 			void model_impl::daily_update_proc() {
@@ -188,6 +189,24 @@ namespace My {
 				float seas2 = (1 / (1 + x3 * exp(-2 * (day - x4) / x5)));
 
 				return std::max(seas1, seas2);
+			}
+
+			void model_impl::worker_eggs_dev_proc() {
+				for (auto iter = data->egg_groups.begin(), end = data->egg_groups.end(); iter != end; iter++) {
+					iter->age++;
+					iter->number -= random-poisson (iter->number * data->MORTALITY_EGGS)//https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_%D0%9F%D1%83%D0%B0%D1%81%D1%81%D0%BE%D0%BD%D0%B0
+				}
+ask eggCohorts
+  [
+    set age age + 1
+    fd 1   ; turtle moves one step (display)
+    set number (number - random-poisson (number * MORTALITY_EGGS))
+    if number < 0 [ set number 0 ]
+      ; random mortality, based on Poisson distribution
+
+    if age = HATCHING_AGE [ set NewWorkerLarvae number ]
+    if age >= HATCHING_AGE [ die ]
+  ]
 			}
 
 			/*
