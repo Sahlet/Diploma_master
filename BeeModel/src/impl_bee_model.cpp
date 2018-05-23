@@ -82,6 +82,9 @@ namespace My {
 			void model_impl::daily_step() {
 				ticks++;
 				daily_update_proc();
+				season_HoPoMo_proc();
+
+				//Egg laying & development:
 			}
 
 			void model_impl::daily_update_proc() {
@@ -162,9 +165,32 @@ namespace My {
 				}
 			}
 
+			void model_impl::season_HoPoMo_proc() {
+				// see Schmickl&Crailsheim2007: p.221 and p.230
+
+				HoPoMo_seasont = season_HoPoMo(date.day);
+			}
+
+			static float model_impl::season_HoPoMo(USHORT day, USHORT parameterList[5]) {
+				//see Schmickl&Crailsheim2007: p.221 and p.230
+
+				if (!parameterList) {
+					parameterList = { 385, 30, 36, 155, 30 };
+				}
+
+				auto x1 = parameterList[0];
+				auto x2 = parameterList[1]; // earlier increase in egg laying rate than in HoPoMo
+				auto x3 = parameterList[2]; // Day of max. egg laying
+				auto x4 = parameterList[3];
+				auto x5 = parameterList[4];
+
+				float seas1 = (1 - (1 / (1 + x1 * exp(-2 * day / x2))));
+				float seas2 = (1 / (1 + x3 * exp(-2 * (day - x4) / x5)));
+
+				return std::max(seas1, seas2);
+			}
+
 			/*
-			DailyUpdateProc
-			SeasonProc_HoPoMo
 			; Egg laying & development:
 			WorkerEggsDevProc
 			DroneEggsDevProc

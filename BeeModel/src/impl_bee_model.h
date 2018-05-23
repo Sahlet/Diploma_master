@@ -23,6 +23,8 @@ namespace My {
 			private:
 				void daily_update_proc();
 				void clear_on_dead();
+				void season_HoPoMo_proc(); // calculates HoPoMo_seasont factor that influences egg laying rate.
+				static float season_HoPoMo(USHORT day, USHORT parameterList[5] = nullptr);
 
 			private:
 				std::shared_ptr<model_data> data;
@@ -37,7 +39,7 @@ namespace My {
 				int ColonyTripForagersSum = 0;
 				int CROPVOLUME = 0;
 				int CumulativeHoneyConsumption = 0;
-				int foragingPeriodForToday = 0; //seconds per (current) day, bees are allowed to forage
+				int foragingPeriodForToday = 0; // seconds per (current) day, bees are allowed to forage
 				int DailyHoneyConsumption = 0;
 				int DailyMiteFall = 0;
 				int DailyPollenConsumption_g = 0;
@@ -64,7 +66,7 @@ namespace My {
 				int HarvestedHoney_kg = 0;
 				int HATCHING_AGE = 0;
 				int HONEY_STORE_INIT = 0;
-				double honeyEnergyStore = 0; //in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
+				double honeyEnergyStore = 0; // in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
 				int HoPoMo_seasont = 0;
 				int IdealPollenStore_g = 0;
 				int InhivebeesDiedToday = 0;
