@@ -26,11 +26,11 @@ namespace My {
 
 		struct entity {
 			int64_t id = 0;
-			int age = 0;
+			USHORT age = 0;
 			int ploidy = 0;
-			int number = 0;
-			int numberDied = 0;
-			int invadedByMiteOrganiserID = 0;
+			USHORT number = 0;
+			USHORT numberDied = 0;
+			USHORT invadedByMiteOrganiserID = 0;
 		};
 
 		struct egg_group : entity {};

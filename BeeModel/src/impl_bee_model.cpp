@@ -5,6 +5,8 @@
 
 #include <My/Guard.h>
 
+#include <random>
+
 namespace My {
 
 	namespace BeeModel {
@@ -194,7 +196,18 @@ namespace My {
 			void model_impl::worker_eggs_dev_proc() {
 				for (auto iter = data->egg_groups.begin(), end = data->egg_groups.end(); iter != end; iter++) {
 					iter->age++;
-					iter->number -= random-poisson (iter->number * data->MORTALITY_EGGS)//https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_%D0%9F%D1%83%D0%B0%D1%81%D1%81%D0%BE%D0%BD%D0%B0
+					{
+						//random mortality, based on Poisson distribution
+						std::random_device rd;
+	    				std::mt19937 gen(rd());
+						std::poisson_distribution<USHORT> distr(iter->number * data->MORTALITY_EGGS);
+						iter->number -= distr(gen);
+						if (iter->number < 0) {
+							iter->number = 0;
+						}
+					}
+					
+
 				}
 ask eggCohorts
   [
