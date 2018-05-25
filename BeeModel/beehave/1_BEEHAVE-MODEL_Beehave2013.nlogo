@@ -106,7 +106,7 @@ globals [
   N_GENERIC_PLOTS
   NectarFlightsToday
   NewDroneEggs
-  NewDroneLarvae
+  NewDroneLarvae // newDroneLarvae in c++
   NewDronePupae
   NewDrones
   NewDrones_healthy

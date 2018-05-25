@@ -200,7 +200,7 @@ namespace My {
 					{
 						//random mortality, based on Poisson distribution
 						std::random_device rd;
-	    				std::mt19937 gen(rd());
+						std::mt19937 gen(rd());
 						std::poisson_distribution<USHORT> distr(iter->number * data->MORTALITY_EGGS);
 						iter->number -= distr(gen);
 						if (iter->number < 0) {
@@ -222,9 +222,37 @@ namespace My {
 				}
 			}
 
+			void model_impl::drone_eggs_dev_proc() {
+				newDroneLarvae = 0;
+				for (auto iter = data->egg_drone_groups.begin(), end = data->egg_drone_groups.end(); iter != end;) {
+					iter->age++;
+					{
+						//random mortality, based on Poisson distribution
+						std::random_device rd;
+						std::mt19937 gen(rd());
+						std::poisson_distribution<USHORT> distr(iter->number * data->MORTALITY_DRONE_EGGS);
+						iter->number -= distr(gen);
+						if (iter->number < 0) {
+							iter->number = 0;
+						}
+					}
+
+					if (iter->age == data->DRONE_HATCHING_AGE) {
+						newDroneLarvae += iter->number;
+					}
+
+					auto next = std::next(iter);
+					
+					if (iter->age >= data->DRONE_HATCHING_AGE) {
+						data->egg_drone_groups.erase(iter);
+					}
+
+					iter = next;
+				}
+			}
+
 			/*
 			; Egg laying & development:
-			WorkerEggsDevProc
 			DroneEggsDevProc
 			NewEggsProc
 			SwarmingProc

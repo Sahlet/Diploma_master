@@ -24,6 +24,7 @@ namespace My {
 				void daily_update_proc();
 				void season_HoPoMo_proc(); // calculates HoPoMo_seasont factor that influences egg laying rate.
 				void worker_eggs_dev_proc(); // worker eggs ageing, deletion of oldest groups
+				void drone_eggs_dev_proc(); // drone eggs ageing, deletion of oldest groups
 
 				void clear_on_dead();
 				static float season_HoPoMo(USHORT day, USHORT parameterList[5] = nullptr);
@@ -50,7 +51,6 @@ namespace My {
 				int DRONE_EGGLAYING_START = 0;
 				int DRONE_EGGLAYING_STOP = 0;
 				int DRONE_EMERGING_AGE = 0;
-				int DRONE_HATCHING_AGE = 0;
 				int DRONE_LIFESPAN = 0;
 				int DRONE_PUPATION_AGE = 0;
 				int DRONE_EGGS_PROPORTION = 0;
@@ -97,12 +97,10 @@ namespace My {
 				int MITE_FALL_WORKERCELL = 0;
 				int MITE_MORTALITY_BROODPERIOD = 0;
 				int MITE_MORTALITY_WINTER = 0;
-				int MORTALITY_DRONE_EGGS = 0;
 				int MORTALITY_DRONE_LARVAE = 0;
 				int MORTALITY_DRONE_PUPAE = 0;
 				int MORTALITY_DRONES = 0;
 				int MORTALITY_DRONES_INFECTED_AS_PUPAE = 0;
-				int MORTALITY_EGGS = 0;
 				int MORTALITY_FOR_PER_SEC = 0;
 				int MORTALITY_INHIVE = 0;
 				int MORTALITY_INHIVE_INFECTED_AS_ADULT = 0;
@@ -112,7 +110,7 @@ namespace My {
 				int N_FLOWERPATCHES = 0;
 				int N_GENERIC_PLOTS = 0;
 				int NewDroneEggs = 0;
-				int NewDroneLarvae = 0;
+				UINT newDroneLarvae = 0; // number of drone eggs that developed into larvae today
 				int NewDronePupae = 0;
 				int NewDrones = 0;
 				int NewDrones_healthy = 0;

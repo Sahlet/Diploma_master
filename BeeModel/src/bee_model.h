@@ -113,8 +113,10 @@ namespace My {
 
 		struct model_data {
 			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
-			float MORTALITY_EGGS = 0.03; // daily mortality rate of worker eggs
+			float MORTALITY_EGGS = 0.03; // daily mortality rate of worker eggs (from Schmickl & Crailsheim (2007))
 			UINT HATCHING_AGE = 3; // (days) age at which worker larvae hatch from eggs (from Winston (1987) p.50)
+			float MORTALITY_DRONE_EGGS = 0.064; // daily mortality rate of drone eggs (from Fukuda, Ohtani (1977))
+			UINT DRONE_HATCHING_AGE = 3; // (days) age at which drone larvae hatch from eggs (from Jay (1963), Hrassnig & Crailsheim (2005))
 
 			std::list<egg_group> egg_groups;
 			std::list<egg_drone_group> egg_drone_groups;
