@@ -119,7 +119,7 @@ globals [
     ; all (healthy and infected) mites released from cells (mothers+offspring)
     ; on current day (calculated after MiteFall!)
   NewWorkerEggs
-  NewWorkerLarvae
+  NewWorkerLarvae //newWorkerLarvae on c++
   NewWorkerPupae
   PATCHCOLOR
   PhoreticMites   ; all phoretic mites, healthy and infected

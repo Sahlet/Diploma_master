@@ -66,7 +66,6 @@ namespace My {
 				int ForagingRounds = 0;
 				int ForagingSpontaneousProb = 0;
 				int HarvestedHoney_kg = 0;
-				int HATCHING_AGE = 0;
 				int HONEY_STORE_INIT = 0;
 				double honeyEnergyStore = 0; // in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
 				int HoPoMo_seasont = 0;
@@ -126,7 +125,7 @@ namespace My {
 					// all (healthy and infected) mites released from cells (mothers+offspring)
 					// on current day (calculated after MiteFall!)
 				int NewWorkerEggs = 0;
-				int NewWorkerLarvae = 0;
+				UINT newWorkerLarvae = 0; // number of worker eggs that developed into larvae today
 				int NewWorkerPupae = 0;
 				int PATCHCOLOR = 0;
 				int PhoreticMites = 0;	 // all phoretic mites, healthy and infected

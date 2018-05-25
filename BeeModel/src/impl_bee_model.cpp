@@ -194,7 +194,8 @@ namespace My {
 			}
 
 			void model_impl::worker_eggs_dev_proc() {
-				for (auto iter = data->egg_groups.begin(), end = data->egg_groups.end(); iter != end; iter++) {
+				newWorkerLarvae = 0;
+				for (auto iter = data->egg_groups.begin(), end = data->egg_groups.end(); iter != end;) {
 					iter->age++;
 					{
 						//random mortality, based on Poisson distribution
@@ -206,20 +207,19 @@ namespace My {
 							iter->number = 0;
 						}
 					}
+
+					if (iter->age == data->HATCHING_AGE) {
+						newWorkerLarvae += iter->number;
+					}
+
+					auto next = std::next(iter);
 					
+					if (iter->age >= data->HATCHING_AGE) {
+						data->egg_groups.erase(iter);
+					}
 
+					iter = next;
 				}
-ask eggCohorts
-  [
-    set age age + 1
-    fd 1   ; turtle moves one step (display)
-    set number (number - random-poisson (number * MORTALITY_EGGS))
-    if number < 0 [ set number 0 ]
-      ; random mortality, based on Poisson distribution
-
-    if age = HATCHING_AGE [ set NewWorkerLarvae number ]
-    if age >= HATCHING_AGE [ die ]
-  ]
 			}
 
 			/*
