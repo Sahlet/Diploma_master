@@ -25,6 +25,7 @@ namespace My {
 				void season_HoPoMo_proc(); // calculates HoPoMo_seasont factor that influences egg laying rate.
 				void worker_eggs_dev_proc(); // worker eggs ageing, deletion of oldest groups
 				void drone_eggs_dev_proc(); // drone eggs ageing, deletion of oldest groups
+				void new_eggs_proc(); // calculates number of worker and drone eggs to be laid today
 
 				void clear_on_dead();
 				static float season_HoPoMo(USHORT day, USHORT parameterList[5] = nullptr);
@@ -50,25 +51,22 @@ namespace My {
 				int DecentHoneyEnergyStore = 0;
 				int DRONE_EGGLAYING_START = 0;
 				int DRONE_EGGLAYING_STOP = 0;
-				int DRONE_EMERGING_AGE = 0;
 				int DRONE_LIFESPAN = 0;
 				int DRONE_PUPATION_AGE = 0;
 				int DRONE_EGGS_PROPORTION = 0;
-				int EMERGING_AGE = 0;
 				int ENERGY_HONEY_per_g = 0;
 				int ENERGY_SUCROSE = 0;
 				int ExcessBrood = 0;
 				int FIND_DANCED_PATCH_PROB = 0;
 				int FLIGHT_VELOCITY = 0;
 				int FLIGHTCOSTS_PER_m = 0;
-				int FORAGER_NURSING_CONTRIBUTION = 0;
 				int FORAGING_STOP_PROB = 0;
 				int ForagingRounds = 0;
 				int ForagingSpontaneousProb = 0;
 				int HarvestedHoney_kg = 0;
 				int HONEY_STORE_INIT = 0;
 				double honeyEnergyStore = 0; // in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
-				int HoPoMo_seasont = 0;
+				float HoPoMo_seasont = 0; // seasonal factor (from Schmickl&Crailsheim 2007), which affects egg-laying and food availability
 				int IdealPollenStore_g = 0;
 				int InhivebeesDiedToday = 0;
 				int INVADING_DRONE_CELLS_AGE = 0;
@@ -83,9 +81,7 @@ namespace My {
 				int LIFESPAN = 0;
 				int LostBroodTotal = 0;	// brood that die due to lack of nursing or lack of pollen
 				int MAX_AFF = 0;
-				int MAX_BROOD_NURSE_RATIO = 0;
 				int MAX_DANCE_CIRCUITS = 0;
-				int MAX_EGG_LAYING = 0;
 				int MAX_HONEY_ENERGY_STORE = 0;
 				int MAX_INVADED_MITES_DRONECELL = 0;
 				int MAX_INVADED_MITES_WORKERCELL = 0;
