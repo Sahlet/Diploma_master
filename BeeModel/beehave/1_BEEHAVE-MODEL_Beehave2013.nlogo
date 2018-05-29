@@ -105,7 +105,7 @@ globals [
   N_FLOWERPATCHES
   N_GENERIC_PLOTS
   NectarFlightsToday
-  NewDroneEggs
+  NewDroneEggs // newDroneEggs in c++
   NewDroneLarvae // newDroneLarvae in c++
   NewDronePupae
   NewDrones
@@ -118,8 +118,8 @@ globals [
   NewReleasedMitesToday
     ; all (healthy and infected) mites released from cells (mothers+offspring)
     ; on current day (calculated after MiteFall!)
-  NewWorkerEggs
-  NewWorkerLarvae //newWorkerLarvae on c++
+  NewWorkerEggs // newWorkerEggs in c++
+  NewWorkerLarvae // newWorkerLarvae in c++
   NewWorkerPupae
   PATCHCOLOR
   PhoreticMites   ; all phoretic mites, healthy and infected

@@ -117,12 +117,17 @@ namespace My {
 			UINT HATCHING_AGE = 3; // (days) age at which worker larvae hatch from eggs (from Winston (1987) p.50)
 			float MORTALITY_DRONE_EGGS = 0.064; // daily mortality rate of drone eggs (from Fukuda, Ohtani (1977))
 			UINT DRONE_HATCHING_AGE = 3; // (days) age at which drone larvae hatch from eggs (from Jay (1963), Hrassnig & Crailsheim (2005))
+			UINT DRONE_PUPATION_AGE = 10; // (days) age of pupation for drone (from Winston (1987))
+			UINT DRONE_EMERGING_AGE = 24; // age at which adult drones emerge from pupae (from Winston (1987))
 			UINT MAX_EGG_LAYING = 1600; // maximum egg laying rate per day
 			UINT EMERGING_AGE = 21; // age at which adult workers emerge from pupae (Winston (1987) p.50)
-			UINT DRONE_EMERGING_AGE = 24; // age at which adult drones emerge from pupae (from Winston (1987))
 			float FORAGER_NURSING_CONTRIBUTION = 0.2; // contribution of foragers on brood care
 			float MAX_BROOD_NURSE_RATIO = 3; // maximum amount of brood, nurse bees can care for (from Free & Racey (1968): 3; Becher et al. (2010): 2.65)
 			bool EGG_LAYING_IH = true; // if true: egg laying is affected by available nurse bees
+			UINT MAX_BROODCELLS = 2000099; // maximum brood space
+			float DRONE_EGGS_PROPORTION = 0.04; // proportion of drone eggs (from Wilkinson & Smith (2002))
+			UINT SEASON_START = 1; //edit // defines beginning of foraging period
+			UINT SEASON_STOP = DAYS_IN_YEAR; //edit // end of foraging period & latest end of drone production
 
 			std::list<egg_group> egg_groups;
 			std::list<egg_drone_group> egg_drone_groups;
@@ -139,6 +144,7 @@ namespace My {
 			date_struct date; // all other data in model_data object setted for the end of this date (for the evening)
 
 			UINT Queenage = 1; // in days (min value is 1)
+			bool QueenAgeing = false; // if true: egg laying rate decreases with queen age (following BEEPOP) and the queen is replaced every year
 			
 			prop<bool> colonyDied;
 			std::string deathReason;

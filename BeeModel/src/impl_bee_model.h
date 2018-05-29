@@ -53,7 +53,6 @@ namespace My {
 				int DRONE_EGGLAYING_STOP = 0;
 				int DRONE_LIFESPAN = 0;
 				int DRONE_PUPATION_AGE = 0;
-				int DRONE_EGGS_PROPORTION = 0;
 				int ENERGY_HONEY_per_g = 0;
 				int ENERGY_SUCROSE = 0;
 				int ExcessBrood = 0;
@@ -105,7 +104,7 @@ namespace My {
 				int MORTALITY_PUPAE = 0;
 				int N_FLOWERPATCHES = 0;
 				int N_GENERIC_PLOTS = 0;
-				int NewDroneEggs = 0;
+				UINT newDroneEggs = 0; // number of drone eggs laid today
 				UINT newDroneLarvae = 0; // number of drone eggs that developed into larvae today
 				int NewDronePupae = 0;
 				int NewDrones = 0;
@@ -118,7 +117,7 @@ namespace My {
 				int NewReleasedMitesToday = 0;
 					// all (healthy and infected) mites released from cells (mothers+offspring)
 					// on current day (calculated after MiteFall!)
-				int NewWorkerEggs = 0;
+				UINT newWorkerEggs = 0; // number of worker eggs laid today
 				UINT newWorkerLarvae = 0; // number of worker eggs that developed into larvae today
 				int NewWorkerPupae = 0;
 				int PATCHCOLOR = 0;
@@ -141,8 +140,6 @@ namespace My {
 				int SaveWhoDroneLarvaeToPupae = 0;
 				int SaveWhoWorkerLarvaeToPupae = 0;
 				int SEARCH_LENGTH_M = 0;
-				int SEASON_START = 0; // defines beginning of foraging period
-				int SEASON_STOP = 0; // end of foraging period & latest end of drone production
 				int SimpleDancing = 0;
 				int STEPWIDTH = 0;
 				int STEPWIDTHdrones = 0;

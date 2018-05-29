@@ -280,6 +280,52 @@ namespace My {
 				auto ELRt = (data->EGG_LAYING_IH && ELRt_IH < ELRt_HoPoMo) ? ELRt_IH : ELRt_HoPoMo;
 
 				ELRt = std::min(ELRt, MAX_EGG_LAYING);
+
+				//LIMITED BROOD NEST:
+				if (data->TotalWorkerAndDroneBrood + ELRt > data->MAX_BROODCELLS) {
+					ELRt = data->MAX_BROODCELLS - TotalWorkerAndDroneBrood;
+				}
+
+				newWorkerEggs = (UINT)ELRt;
+
+				//CALCULATION OF DRONE EGGS:
+				newDroneEggs = (UINT)(newWorkerEggs * data->DRONE_EGGS_PROPORTION);
+
+				//no more drone brood at end of season
+				if (
+					data->date.day >= (
+						data->SEASON_STOP - (data->DRONE_HATCHING_AGE + data->DRONE_PUPATION_AGE + data->DRONE_EMERGING_AGE)
+					)
+				) {
+					newDroneEggs = 0;
+				}
+
+				//newWorkerEggs -= newDroneEggs;
+
+				//AGEING OF QUEEN - based on deGrandi-Hofmann, BEEPOP:
+				if (data->QueenAgeing) {
+					
+				}
+  if QueenAgeing = true ; GUI: "switch"
+  [
+    let potentialEggs (MAX_EGG_LAYING
+        + (-0.0027 * Queenage ^ 2)
+        + (0.395 * Queenage))
+          ; Beepops potential egglaying Pt
+    set NewWorkerEggs round (NewWorkerEggs * (potentialEggs / MAX_EGG_LAYING) )
+  ]
+
+  ; no egg-laying of young queen (also if QUEEN_AGEING = false!):
+  if Queenage <= 10
+  [
+    set NewWorkerEggs 0
+      ; Winston p. 203: 5-6d until sexually mature, 2-4d for orientation and mating flight, mating
+      ; can be postponed for 4 weeks if weather is bad
+
+    set NewDroneEggs 0
+  ]
+  if NewWorkerEggs < 0 [ set NewWorkerEggs 0 ]
+  if NewDroneEggs < 0 [ set NewDroneEggs 0 ]
 			}
 
  to NewEggsProc
