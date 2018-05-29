@@ -83,6 +83,11 @@ namespace My {
 					return false;
 				}
 
+				if (DRONE_EGGS_PROPORTION < 0 || DRONE_EGGS_PROPORTION > 1) {
+					info = "invalid DRONE_EGGS_PROPORTION";
+					return false;
+				}
+
 				return true;
 			}
 
@@ -286,10 +291,8 @@ namespace My {
 					ELRt = data->MAX_BROODCELLS - TotalWorkerAndDroneBrood;
 				}
 
-				newWorkerEggs = (UINT)ELRt;
-
-				//CALCULATION OF DRONE EGGS:
-				newDroneEggs = (UINT)(newWorkerEggs * data->DRONE_EGGS_PROPORTION);
+				newWorkerEggs = (UINT)(ELRt * (1 - data->DRONE_EGGS_PROPORTION));
+				newDroneEggs = (UINT)(ELRt * data->DRONE_EGGS_PROPORTION);
 
 				//no more drone brood at end of season
 				if (
@@ -300,103 +303,26 @@ namespace My {
 					newDroneEggs = 0;
 				}
 
-				//newWorkerEggs -= newDroneEggs;
-
 				//AGEING OF QUEEN - based on deGrandi-Hofmann, BEEPOP:
 				if (data->QueenAgeing) {
-					
+					float potentialEggs = data->MAX_EGG_LAYING + (-0.0027 * data->Queenage ^ 2) + (0.395 * data->Queenage);
+					newWorkerEggs = (UINT)(newWorkerEggs * potentialEggs / data->MAX_EGG_LAYING)
 				}
-  if QueenAgeing = true ; GUI: "switch"
-  [
-    let potentialEggs (MAX_EGG_LAYING
-        + (-0.0027 * Queenage ^ 2)
-        + (0.395 * Queenage))
-          ; Beepops potential egglaying Pt
-    set NewWorkerEggs round (NewWorkerEggs * (potentialEggs / MAX_EGG_LAYING) )
-  ]
+				
+				//no egg-laying of young queen (also if QUEEN_AGEING = false!):
+				if (data->Queenage <= 10) {
+					//Winston p. 203: 5-6d until sexually mature, 2-4d for orientation and mating flight, mating
+      				//can be postponed for 4 weeks if weather is bad
+					newWorkerEggs = 0;
+					newDroneEggs = 0;
+				}
 
-  ; no egg-laying of young queen (also if QUEEN_AGEING = false!):
-  if Queenage <= 10
-  [
-    set NewWorkerEggs 0
-      ; Winston p. 203: 5-6d until sexually mature, 2-4d for orientation and mating flight, mating
-      ; can be postponed for 4 weeks if weather is bad
-
-    set NewDroneEggs 0
-  ]
-  if NewWorkerEggs < 0 [ set NewWorkerEggs 0 ]
-  if NewDroneEggs < 0 [ set NewDroneEggs 0 ]
+				newWorkerEggs = std::max(0, newWorkerEggs);
+				newDroneEggs = std::max(0, newDroneEggs);
 			}
-
- to NewEggsProc
-  ; CALLED BY WorkerEggLayingProc   see: HoPoMo p.222 & p.230, ignoring ELRstoch
-  let ELRt_HoPoMo (MAX_EGG_LAYING * (1 - HoPoMo_seasont))
-  if EMERGING_AGE <= 0 [ set BugAlarm true show "EMERGING_AGE <= 0" ]
-  let ELRt_IH (TotalIHbees
-      + TotalForagers * FORAGER_NURSING_CONTRIBUTION)
-      * MAX_BROOD_NURSE_RATIO / EMERGING_AGE
-        ; EMERGING_AGE = 21: total developmental time of worker brood
-
-  let ELRt ELRt_HoPoMo
-    ; egg laying rate follows a seasonal pattern as described in
-    ; HoPoMo (Schmickl & Crailsheim 2007)
-
-  if EggLaying_IH = true and ELRt_IH < ELRt_HoPoMo
-    ; if EggLaying_IH SWITCH is on and not enough nurse bees are available,
-    ; the egg laying rate is reduced to ELRt_IH
-  [
-    set ELRt ELRt_IH
-  ]
-
-  if ELRt > MAX_EGG_LAYING
-  [
-    set ELRt MAX_EGG_LAYING
-  ]
-
-  ;   LIMITED BROOD NEST:
-  if TotalWorkerAndDroneBrood + ELRt > MAX_BROODCELLS
-  [
-    set ELRt MAX_BROODCELLS - TotalWorkerAndDroneBrood
-  ]
-
-  set NewWorkerEggs round ELRt  ; ROUND! in contrast to HoPoMo
-
-  ; CALCULATION OF DRONE EGGS:
-  set NewDroneEggs floor(NewWorkerEggs * DRONE_EGGS_PROPORTION)
-  if Day >= SEASON_STOP
-     - ( DRONE_HATCHING_AGE
-     -   DRONE_PUPATION_AGE
-     -   DRONE_EMERGING_AGE )
-  [
-    set NewDroneEggs 0
-  ] ; no more drone brood at end of season (however: Season set to day 1 - 365)
-
-  ; AGEING OF QUEEN - based on deGrandi-Hofmann, BEEPOP:
-  if QueenAgeing = true ; GUI: "switch"
-  [
-    let potentialEggs (MAX_EGG_LAYING
-        + (-0.0027 * Queenage ^ 2)
-        + (0.395 * Queenage))
-          ; Beepops potential egglaying Pt
-    set NewWorkerEggs round (NewWorkerEggs * (potentialEggs / MAX_EGG_LAYING) )
-  ]
-
-  ; no egg-laying of young queen (also if QUEEN_AGEING = false!):
-  if Queenage <= 10
-  [
-    set NewWorkerEggs 0
-      ; Winston p. 203: 5-6d until sexually mature, 2-4d for orientation and mating flight, mating
-      ; can be postponed for 4 weeks if weather is bad
-
-    set NewDroneEggs 0
-  ]
-  if NewWorkerEggs < 0 [ set NewWorkerEggs 0 ]
-  if NewDroneEggs < 0 [ set NewDroneEggs 0 ]
-end
 
 			/*
 			; Egg laying & development:
-			NewEggsProc
 			SwarmingProc
 			WorkerEggLayingProc
 			DroneEggLayingProc
