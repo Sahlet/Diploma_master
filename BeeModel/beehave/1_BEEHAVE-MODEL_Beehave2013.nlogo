@@ -154,7 +154,7 @@ globals [
   STEPWIDTHdrones
   SumLifeSpanAdultWorkers_t
   SummedForagerSquadronsOverTime
-  SwarmingDate
+  SwarmingDate // SwarmingDay in c++
   TIME_UNLOADING
   TIME_UNLOADING_POLLEN
   TodaysAllPatchesList

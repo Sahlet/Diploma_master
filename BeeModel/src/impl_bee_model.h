@@ -146,7 +146,6 @@ namespace My {
 				int STEPWIDTHdrones = 0;
 				int SumLifeSpanAdultWorkers_t = 0;
 				int SummedForagerSquadronsOverTime = 0;
-				int SwarmingDate = 0;
 				int TIME_UNLOADING = 0;
 				int TIME_UNLOADING_POLLEN = 0;
 				int TotalBeesAdded = 0;

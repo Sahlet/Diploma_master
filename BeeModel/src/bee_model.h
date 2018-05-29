@@ -112,6 +112,14 @@ namespace My {
 			int invadedWorkerCohortID = 0;
 		};
 
+		meke_enum(swarming_type,
+			NO_SWARMING,
+			SWARM_CONTROL, // by beekeeper
+			PARENTAL_COLONY,
+			DOUGHTER_COLONY, 
+			PRIME_SWARM
+		);
+
 		struct model_data {
 			//Model settings
 			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
@@ -130,11 +138,12 @@ namespace My {
 			float DRONE_EGGS_PROPORTION = 0.04; // proportion of drone eggs (from Wilkinson & Smith (2002))
 			UINT SEASON_START = 1; //edit // defines beginning of foraging period
 			UINT SEASON_STOP = DAYS_IN_YEAR; //edit // end of foraging period & latest end of drone production
+			UINT PRE_SWARMING_PERIOD = 3; // defines period during which colony prepares for swarming (from Schmickl & Crailsheim (2007): 3 days, Winston (1987) p. 184: "until the week before swarming")
 
 			//Process settings
 			bool ClearOnDead = false; // if true: some data will delete
 			bool QueenAgeing = false; // if true: egg laying rate decreases with queen age (following BEEPOP) and the queen is replaced every year
-			bool Swarming = false;
+			swarming_type Swarming = swarming_type::NO_SWARMING;
 
 			//Model data
 			std::list<egg_group> egg_groups;
@@ -151,7 +160,8 @@ namespace My {
 
 			date_struct date; // all other data in model_data object setted for the end of this date (for the evening)
 
-			UINT Queenage = 1; // in days (min value is 1)
+			int Queenage = 1; // in days (min value is 1)
+			UINT SwarmingDay = 0; // julian day when swarming takes place; reset to 0 at the end of a year
 			
 			prop<bool> colonyDied;
 			std::string deathReason;

@@ -49,12 +49,6 @@ namespace My {
 					return false;
 				}
 
-				if (data.Queenage <= 0)
-				{
-					info = "invalid Queenage";
-					return false;
-				}
-
 				for (auto& patch : data.flower_patchs) {
 					if (!patch.dailyData)
 					{
@@ -103,15 +97,22 @@ namespace My {
 
 			
 			void model_impl::daily_step() {
+				if (data->colonyDied) {
+					return;
+				}
 				ticks++;
 				daily_update_proc();
+				if (data->colonyDied) {
+					return;
+				}
+				
 				season_HoPoMo_proc();
 
 				//Egg laying & development:
 				worker_eggs_dev_proc();
 				drone_eggs_dev_proc();
 				new_eggs_proc();
-				if (data->Swarming) {
+				if (data->Swarming != swarming_type::NO_SWARMING) {
 					swarming_proc();
 				}
 			}
@@ -328,8 +329,158 @@ namespace My {
 			}
 
 			void swarming_proc() {
+				float fractionSwarm = 0.6; // Winston p. 187
+				UINT broodSwarmingTH = 17000; // Fefferman & Starks 2006 (model)
+				UINT lastSwarmingDate = 199; // Winston 1980: prime: 14.05.(134) after swarm: 18.07.(199)
 
+				if (data->SwarmingDay == 0 && data->TotalWorkerAndDroneBrood > broodSwarmingTH and data->date.day <= (lastSwarmingDate - data->PRE_SWARMING_PERIOD)) {
+					data->SwarmingDay = data->date.day + data->PRE_SWARMING_PERIOD;
+				}
+
+				if (data->date.day >= data->SwarmingDay - data->PRE_SWARMING_PERIOD && data->date.day <= data->SwarmingDay) {
+					if (data->Swarming == swarming_type::PARENTAL_COLONY) {
+						newDroneEggs = 0;
+      					newWorkerEggs = 0;
+      					if (data->date.day == data->SwarmingDay) {
+      						//SWARMING of PARENTAL colony:
+
+							//a new queen is left in the hive, still in a capped cell, ca. 7 days before she emerges (Winston p. 187)
+      						data->Queenage = -7;
+
+							//Winston p. 185: 36mg honey is taken by a swarming bee:
+							//honeyEnergyStore -= (TotalForagers + TotalIHbees) * 0.036 * ENERGY_HONEY_per_g * fractionSwarm;
+      					}
+					}
+				}
 			}
+
+to SwarmingProc
+
+  if day >= SwarmingDate - PRE_SWARMING_PERIOD
+     and day <= SwarmingDate
+  [
+    if Swarming = "Swarming (parental colony)"
+    [ ; Swarm PREPARATION of PARENTAL colony:
+      set NewDroneEggs 0
+      set NewWorkerEggs 0
+      if  day = SwarmingDate
+      [ ; SWARMING of PARENTAL colony:
+        set Queenage -7
+          ; a new queen is left in the hive, still in a capped cell, ca. 7d
+          ; before she emerges (Winston p. 187)
+
+        ; Winston p. 185: 36mg honey is taken by a swarming bee:
+        set HoneyEnergyStore HoneyEnergyStore
+           - (( TotalForagers + TotalIHbees) * 0.036 * ENERGY_HONEY_per_g)
+           * fractionSwarm
+
+        ; (1-fractionSwarm) of all healthy & infected in-hive bees stay in the hive:
+        ask IHbeeCohorts
+        [
+          set number_Healthy round (number_Healthy * (1 - fractionSwarm))
+          set number_infectedAsPupa round (number_infectedAsPupa * (1 - fractionSwarm))
+          set number_infectedAsAdult round (number_infectedAsAdult * (1 - fractionSwarm))
+          set number number_Healthy + number_infectedAsPupa + number_infectedAsAdult
+        ]
+
+        ; (1-fractionSwarm) of all healthy & infected drones stay in the hive:
+        ask droneCohorts
+        [
+          set number_Healthy round (number_Healthy * (1 - fractionSwarm))
+          set number_infectedAsPupa round (number_infectedAsPupa * (1 - fractionSwarm))
+          set number number_Healthy + number_infectedAsPupa
+        ]
+
+        ; fractionSwarm foragers leave the colony and are considered to be dead in the model:
+        ask foragerSquadrons
+        [
+          if random-float 1 < fractionSwarm [ die ]
+        ] ; LEAVING foragers are treated as being dead
+
+        ; the phoretic mite population in the hive is reduced:
+        set PhoreticMites round (PhoreticMites * (1 - fractionSwarm))
+        output-type "Swarming on day: " output-print day
+        set SwarmingDate 0  ; allows production of after swarms
+      ]
+    ]
+
+
+    if Swarming = "Swarming (prime swarm)"
+    [ ; Swarm PREPARATION of PRIME SWARM:
+      set NewDroneEggs 0
+      set NewWorkerEggs 0
+      if  day = SwarmingDate
+      [ ; Swarming of PRIME SWARM:
+        ask (turtle-set eggCohorts larvaeCohorts droneEggCohorts droneLarvaeCohorts)
+        [ ; all brod is left behind and hence removed from the smulation:
+          set number 0
+        ]
+        ask (turtle-set pupaeCohorts dronePupaeCohorts)
+        [
+          set number 0
+          set number_infectedAsPupa 0
+          set number_healthy 0
+        ]
+        set NewWorkerLarvae 0
+        set NewDroneLarvae 0
+        set NewWorkerPupae 0
+        set NewDronePupae 0
+        ask IHbeeCohorts
+        [ ; fractionSwarm of all healthy & infected in-hive bees join the swarm
+          set number_Healthy round (number_Healthy * fractionSwarm)
+          set number_infectedAsPupa round (number_infectedAsPupa * fractionSwarm)
+          set number_infectedAsAdult round (number_infectedAsAdult * fractionSwarm)
+          set number number_Healthy + number_infectedAsPupa + number_infectedAsAdult
+        ]
+
+        ask droneCohorts
+        [ ; fractionSwarm of all healthy & infected drones join the swarm
+          set number_Healthy round (number_Healthy * fractionSwarm)
+          set number_infectedAsPupa round (number_infectedAsPupa * fractionSwarm)
+          set number number_Healthy + number_infectedAsPupa
+        ]
+
+        ask foragerSquadrons
+        [ ; (1 - fractionSwarm) foragers do not join the swarm and hence die (in the model):
+          if random-float 1 < (1 - fractionSwarm) [ die ]
+        ]
+
+        ask miteOrganisers [ die ]
+          ; mites in brood cells are left behind in the old colony
+
+        ; the phoretic mite population in the swarm is reduced:
+        set PhoreticMites round (PhoreticMites * fractionSwarm)
+        set PollenStore_g 0
+        set HoneyEnergyStore
+              ((TotalForagers + TotalIHbees)
+                * 36 * ENERGY_HONEY_per_g) / 1000
+          ; Winston p. 185: 36mg honey per bee during swarming
+        output-type "Swarming on day: "
+        output-print day
+        set SwarmingDate 0  ; allows production of after swarms
+      ] ; if  day = SwarmingDate ..
+    ] ; if Swarming = "Swarming (prime swarm)"   ,,
+  ] ; if SwarmingDate > 0 and ..
+
+  if Swarming = "Swarm (daughter colony)"
+     and day > SwarmingDate
+     and day <= SwarmingDate + POST_SWARMING_PERIOD   ; DAUGHTER COLONY AFTER SWARMING (0d period)
+  [ ; no eggs can be laid, no food stored, as long as they have no new home..
+    set NewDroneEggs 0
+    set NewWorkerEggs 0
+    set PollenStore_g 0
+    set Aff MAX_AFF
+    if HoneyEnergyStore >
+      (((TotalForagers + TotalIHbees) * CROPVOLUME) / 1000)
+         * 1.36 * ENERGY_HONEY_per_g
+    [
+      set HoneyEnergyStore (((TotalForagers + TotalIHbees) *
+        CROPVOLUME) / 1000) * 1.36 * ENERGY_HONEY_per_g
+    ]
+  ]
+  ; resetting SwarmingDate to zero at the end of a year:
+  if day = 365 [ set SwarmingDate 0 ]
+end
 
 			/*
 			; Egg laying & development:
