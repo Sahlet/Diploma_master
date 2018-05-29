@@ -25,10 +25,11 @@ namespace My {
 			}
 		}
 
-		void flower_patch::updateDailyData(const date_struct& date) {
+		void flower_patch::daily_data::update(const date_struct& date) {
+			LOGW("not overwrited flower_patch::daily_data::update function (const quantityMyl and amountPollen_g)");
 			dailyData = daily_data();
-		    dailyData.quantityMyl = 20 * 1000 * 1000;
-		    dailyData.amountPollen_g = 1 * 1000;
+		    dailyData.quantityMyl = 20 * 1000 * 1000; //see FlowerPatchesMaxFoodAvailableTodayREP in nlogo file;
+		    dailyData.amountPollen_g = 1 * 1000; //see FlowerPatchesMaxFoodAvailableTodayREP in nlogo file;
 		}
 
 		int model_data::getForagingPeriodForToday() {
@@ -108,6 +109,11 @@ namespace My {
 
 				//Egg laying & development:
 				worker_eggs_dev_proc();
+				drone_eggs_dev_proc();
+				new_eggs_proc();
+				if (data->Swarming) {
+					swarming_proc();
+				}
 			}
 
 			void model_impl::daily_update_proc() {
@@ -151,7 +157,7 @@ namespace My {
 			}
 
 			void model_impl::clear_on_dead() {
-				if (data->clearOnDead) {
+				if (data->ClearOnDead) {
 					for (auto& group : egg_groups) {
 						group.number = 0;
 					}
@@ -319,6 +325,10 @@ namespace My {
 
 				newWorkerEggs = std::max(0, newWorkerEggs);
 				newDroneEggs = std::max(0, newDroneEggs);
+			}
+
+			void swarming_proc() {
+
 			}
 
 			/*

@@ -26,6 +26,7 @@ namespace My {
 				void worker_eggs_dev_proc(); // worker eggs ageing, deletion of oldest groups
 				void drone_eggs_dev_proc(); // drone eggs ageing, deletion of oldest groups
 				void new_eggs_proc(); // calculates number of worker and drone eggs to be laid today
+				void swarming_proc(); // calculates day of swarming, removal of parts of the colony, stores
 
 				void clear_on_dead();
 				static float season_HoPoMo(USHORT day, USHORT parameterList[5] = nullptr);

@@ -77,6 +77,7 @@ namespace My {
 				UINT pollenVisitsToday = 0; // number of bees collected pollen from that patch today
 
 				//Updates daily_data on the specified date
+				//function has to be overwrited
 				virtual void update(const date_struct& date);
 			};
 
@@ -112,6 +113,7 @@ namespace My {
 		};
 
 		struct model_data {
+			//Model settings
 			UINT CRITICAL_COLONY_SIZE_WINTER = 4000; // Martin (2001): 4000 adult workers during winter (from Free & Spencer-Booth 1958, Harbo 1983)
 			float MORTALITY_EGGS = 0.03; // daily mortality rate of worker eggs (from Schmickl & Crailsheim (2007))
 			UINT HATCHING_AGE = 3; // (days) age at which worker larvae hatch from eggs (from Winston (1987) p.50)
@@ -129,6 +131,12 @@ namespace My {
 			UINT SEASON_START = 1; //edit // defines beginning of foraging period
 			UINT SEASON_STOP = DAYS_IN_YEAR; //edit // end of foraging period & latest end of drone production
 
+			//Process settings
+			bool ClearOnDead = false; // if true: some data will delete
+			bool QueenAgeing = false; // if true: egg laying rate decreases with queen age (following BEEPOP) and the queen is replaced every year
+			bool Swarming = false;
+
+			//Model data
 			std::list<egg_group> egg_groups;
 			std::list<egg_drone_group> egg_drone_groups;
 			std::list<larva_group> larva_groups;
@@ -144,12 +152,10 @@ namespace My {
 			date_struct date; // all other data in model_data object setted for the end of this date (for the evening)
 
 			UINT Queenage = 1; // in days (min value is 1)
-			bool QueenAgeing = false; // if true: egg laying rate decreases with queen age (following BEEPOP) and the queen is replaced every year
 			
 			prop<bool> colonyDied;
 			std::string deathReason;
-			bool clearOnDead = false;
-
+			
 			UINT TotalForagers = 0; // number of all foragers of the colony
 			UINT TotalWorkerAndDroneBrood = 0; // number of all worker and drone eggs, larvae and pupae
 			UINT TotalIHbees = 0; // number of in-hive bees present in the colony
@@ -163,8 +169,6 @@ namespace My {
 
 			//Gets Foraging Period For Today (using date field) in seconds
 			virtual int getForagingPeriodForToday();
-
-			virtual int FlowerPatchesMaxFoodAvailableTodayREP
 		};
 
 		struct internal_model_data;
