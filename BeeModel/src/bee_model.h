@@ -42,8 +42,8 @@ namespace My {
 		struct larva_drone_group : entity {};
 
 		struct base_bee_group : entity {
-			int infectedAsPupa = 0;
-			int healthy = 0;
+			USHORT infectedAsPupa = 0;
+			USHORT healthy = 0;
 		};
 
 		struct pupa_group : base_bee_group {};
@@ -53,7 +53,7 @@ namespace My {
 		struct drone_group : base_bee_group {};
 
 		struct in_hive_bee_group : base_bee_group {
-			int infectedAsAdult = 0;
+			USHORT infectedAsAdult = 0;
 		};
 
 		struct forager_squadron : entity { //bee group, which searching food
@@ -139,6 +139,7 @@ namespace My {
 			UINT SEASON_START = 1; //edit // defines beginning of foraging period
 			UINT SEASON_STOP = DAYS_IN_YEAR; //edit // end of foraging period & latest end of drone production
 			UINT PRE_SWARMING_PERIOD = 3; // defines period during which colony prepares for swarming (from Schmickl & Crailsheim (2007): 3 days, Winston (1987) p. 184: "until the week before swarming")
+			float ENERGY_HONEY_per_g = 12.78; // [kJ/g] energy content of 1g honey (from USDA: 304kcal/100g (http://www.nal.usda.gov/fnic/foodcomp/search/))
 
 			//Process settings
 			bool ClearOnDead = false; // if true: some data will delete
@@ -150,18 +151,20 @@ namespace My {
 			std::list<egg_drone_group> egg_drone_groups;
 			std::list<larva_group> larva_groups;
 			std::list<larva_drone_group> larva_drone_groups;
-			std::list<base_bee_group> base_bee_groups;
 			std::list<pupa_group> pupa_groups;
 			std::list<pupa_drone_group> pupa_drone_groups;
 			std::list<drone_group> drone_groups;
 			std::list<in_hive_bee_group> in_hive_bee_groups;
 			std::list<forager_squadron> forager_squadrons;
 			std::list<flower_patch> flower_patchs;
+			std::list<mite_organiser> mite_organisers;
 
 			date_struct date; // all other data in model_data object setted for the end of this date (for the evening)
 
 			int Queenage = 1; // in days (min value is 1)
-			UINT SwarmingDay = 0; // julian day when swarming takes place; reset to 0 at the end of a year
+			UINT SwarmingDay = 0; // day when swarming takes place; reset to 0 at the end of a year
+			double honeyEnergyStore = 0; // in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
+			UINT PhoreticMites = 0;	 // all phoretic mites, healthy and infected
 			
 			prop<bool> colonyDied;
 			std::string deathReason;

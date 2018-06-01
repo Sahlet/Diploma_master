@@ -138,7 +138,7 @@ namespace My {
 					patch.dailyData->update(data->date);
 				}
 
-				if (honeyEnergyStore < 0) {
+				if (data->honeyEnergyStore < 0) {
 					deathReason = "Starvation";
 					data->colonyDied = true;
 					return;
@@ -158,41 +158,19 @@ namespace My {
 			}
 
 			void model_impl::clear_on_dead() {
-				if (data->ClearOnDead) {
-					for (auto& group : egg_groups) {
-						group.number = 0;
-					}
-					for (auto& group : larva_groups) {
-						group.number = 0;
-					}
-					for (auto& group : pupa_groups) {
-						group.number = 0;
-						group.healthy = 0;
-						group.infectedAsPupa = 0;
-					}
-					for (auto& group : drone_groups) {
-						group.number = 0;
-						group.healthy = 0;
-						group.infectedAsPupa = 0;
-					}
-					for (auto& group : egg_drone_groups) {
-						group.number = 0;
-					}
-					for (auto& group : larva_drone_groups) {
-						group.number = 0;
-					}
-					for (auto& group : pupa_drone_groups) {
-						group.number = 0;
-						group.healthy = 0;
-						group.infectedAsPupa = 0;
-					}
-					for (auto& group : in_hive_bee_groups) {
-						group.number = 0;
-						group.healthy = 0;
-						group.infectedAsPupa = 0;
-						group.infectedAsAdult = 0;
-					}
+				if (!data->ClearOnDead) {
+					return;
 				}
+
+				data->egg_groups.clear();
+				data->egg_drone_groups.clear();
+				data->larva_groups.clear();
+				data->larva_drone_groups.clear();
+				data->pupa_groups.clear();
+				data->pupa_drone_groups.clear();
+				data->drone_groups.clear();
+				data->in_hive_bee_groups.clear();
+				data->forager_squadrons.clear();
 			}
 
 			void model_impl::season_HoPoMo_proc() {
@@ -340,15 +318,94 @@ namespace My {
 				if (data->date.day >= data->SwarmingDay - data->PRE_SWARMING_PERIOD && data->date.day <= data->SwarmingDay) {
 					if (data->Swarming == swarming_type::PARENTAL_COLONY) {
 						newDroneEggs = 0;
-      					newWorkerEggs = 0;
-      					if (data->date.day == data->SwarmingDay) {
-      						//SWARMING of PARENTAL colony:
+						newWorkerEggs = 0;
+						if (data->date.day == data->SwarmingDay) {
+							//SWARMING of PARENTAL colony:
 
 							//a new queen is left in the hive, still in a capped cell, ca. 7 days before she emerges (Winston p. 187)
-      						data->Queenage = -7;
+							data->Queenage = -7;
 
 							//Winston p. 185: 36mg honey is taken by a swarming bee:
-							//honeyEnergyStore -= (TotalForagers + TotalIHbees) * 0.036 * ENERGY_HONEY_per_g * fractionSwarm;
+							data->honeyEnergyStore -= (data->TotalForagers + data->TotalIHbees) * 0.036 * data->ENERGY_HONEY_per_g * fractionSwarm;
+
+							//(1 - fractionSwarm) of all healthy & infected in-hive bees stay in the hive
+							for (auto& group : data->in_hive_bee_groups) {
+								group.healthy = (USHORT)(group.healthy * (1 - fractionSwarm));
+								group.infectedAsPupa = (USHORT)(group.infectedAsPupa * (1 - fractionSwarm));
+								group.infectedAsAdult = (USHORT)(group.infectedAsAdult * (1 - fractionSwarm));
+								group.number = group.healthy + group.infectedAsPupa + group.infectedAsAdult;
+							}
+
+							//(1 - fractionSwarm) of all healthy & infected drones bees stay in the hive
+							for (auto& group : data->drone_groups) {
+								group.healthy = (USHORT)(group.healthy * (1 - fractionSwarm));
+								group.infectedAsPupa = (USHORT)(group.infectedAsPupa * (1 - fractionSwarm));
+								group.number = group.healthy + group.infectedAsPupa;
+							}
+
+							std::mt19937 gen(time());
+
+							//fractionSwarm foragers leave the colony
+							for (auto iter = data->forager_squadrons.begin(), end = data->forager_squadrons.end(); iter != end;) {
+								auto next = std::next(iter);
+					
+								if ((gen() % 100) * 0.01 < fractionSwarm) {
+									data->forager_squadrons.erase(iter);
+								}
+
+								iter = next;
+							}
+
+							data->PhoreticMites = (UINT)(data->PhoreticMites * (1 - fractionSwarm)); //the phoretic mite population in the hive is reduced
+							data->SwarmingDay = 0; //allows production of after swarms
+						}
+					}
+
+					if (data->Swarming == swarming_type::PRIME_SWARM) {
+						newDroneEggs = 0;
+      					newWorkerEggs = 0;
+      					if (data->date.day == data->SwarmingDay) {
+      						data->egg_groups.clear();
+							data->egg_drone_groups.clear();
+							data->larva_groups.clear();
+							data->larva_drone_groups.clear();
+							data->pupa_groups.clear();
+							data->pupa_drone_groups.clear();
+
+							newWorkerLarvae = 0;
+							newDroneLarvae = 0;
+							newWorkerPupae = 0;
+							newDronePupae = 0;
+
+							//fractionSwarm of all healthy & infected in-hive bees join the swarm
+							for (auto& group : data->in_hive_bee_groups) {
+								group.healthy = (USHORT)(group.healthy * fractionSwarm);
+								group.infectedAsPupa = (USHORT)(group.infectedAsPupa * fractionSwarm);
+								group.infectedAsAdult = (USHORT)(group.infectedAsAdult * fractionSwarm);
+								group.number = group.healthy + group.infectedAsPupa + group.infectedAsAdult;
+							}
+
+							//fractionSwarm of all healthy & infected drones bees join the swarm
+							for (auto& group : data->drone_groups) {
+								group.healthy = (USHORT)(group.healthy * fractionSwarm);
+								group.infectedAsPupa = (USHORT)(group.infectedAsPupa * fractionSwarm);
+								group.number = group.healthy + group.infectedAsPupa;
+							}
+
+							std::mt19937 gen(time());
+
+							//(1 - fractionSwarm) foragers do not join the swarm
+							for (auto iter = data->forager_squadrons.begin(), end = data->forager_squadrons.end(); iter != end;) {
+								auto next = std::next(iter);
+					
+								if ((gen() % 100) * 0.01 < (1 - fractionSwarm)) {
+									data->forager_squadrons.erase(iter);
+								}
+
+								iter = next;
+							}
+
+							mite_organisers
       					}
 					}
 				}
@@ -359,50 +416,6 @@ to SwarmingProc
   if day >= SwarmingDate - PRE_SWARMING_PERIOD
      and day <= SwarmingDate
   [
-    if Swarming = "Swarming (parental colony)"
-    [ ; Swarm PREPARATION of PARENTAL colony:
-      set NewDroneEggs 0
-      set NewWorkerEggs 0
-      if  day = SwarmingDate
-      [ ; SWARMING of PARENTAL colony:
-        set Queenage -7
-          ; a new queen is left in the hive, still in a capped cell, ca. 7d
-          ; before she emerges (Winston p. 187)
-
-        ; Winston p. 185: 36mg honey is taken by a swarming bee:
-        set HoneyEnergyStore HoneyEnergyStore
-           - (( TotalForagers + TotalIHbees) * 0.036 * ENERGY_HONEY_per_g)
-           * fractionSwarm
-
-        ; (1-fractionSwarm) of all healthy & infected in-hive bees stay in the hive:
-        ask IHbeeCohorts
-        [
-          set number_Healthy round (number_Healthy * (1 - fractionSwarm))
-          set number_infectedAsPupa round (number_infectedAsPupa * (1 - fractionSwarm))
-          set number_infectedAsAdult round (number_infectedAsAdult * (1 - fractionSwarm))
-          set number number_Healthy + number_infectedAsPupa + number_infectedAsAdult
-        ]
-
-        ; (1-fractionSwarm) of all healthy & infected drones stay in the hive:
-        ask droneCohorts
-        [
-          set number_Healthy round (number_Healthy * (1 - fractionSwarm))
-          set number_infectedAsPupa round (number_infectedAsPupa * (1 - fractionSwarm))
-          set number number_Healthy + number_infectedAsPupa
-        ]
-
-        ; fractionSwarm foragers leave the colony and are considered to be dead in the model:
-        ask foragerSquadrons
-        [
-          if random-float 1 < fractionSwarm [ die ]
-        ] ; LEAVING foragers are treated as being dead
-
-        ; the phoretic mite population in the hive is reduced:
-        set PhoreticMites round (PhoreticMites * (1 - fractionSwarm))
-        output-type "Swarming on day: " output-print day
-        set SwarmingDate 0  ; allows production of after swarms
-      ]
-    ]
 
 
     if Swarming = "Swarming (prime swarm)"

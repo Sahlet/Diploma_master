@@ -54,7 +54,6 @@ namespace My {
 				int DRONE_EGGLAYING_STOP = 0;
 				int DRONE_LIFESPAN = 0;
 				int DRONE_PUPATION_AGE = 0;
-				int ENERGY_HONEY_per_g = 0;
 				int ENERGY_SUCROSE = 0;
 				int ExcessBrood = 0;
 				int FIND_DANCED_PATCH_PROB = 0;
@@ -65,7 +64,6 @@ namespace My {
 				int ForagingSpontaneousProb = 0;
 				int HarvestedHoney_kg = 0;
 				int HONEY_STORE_INIT = 0;
-				double honeyEnergyStore = 0; // in [kJ] (kilojoules) (honey store of the colony (recorded in energy not in weight))
 				float HoPoMo_seasont = 0; // seasonal factor (from Schmickl&Crailsheim 2007), which affects egg-laying and food availability
 				int IdealPollenStore_g = 0;
 				int InhivebeesDiedToday = 0;
@@ -107,7 +105,7 @@ namespace My {
 				int N_GENERIC_PLOTS = 0;
 				UINT newDroneEggs = 0; // number of drone eggs laid today
 				UINT newDroneLarvae = 0; // number of drone eggs that developed into larvae today
-				int NewDronePupae = 0;
+				UINT newDronePupae = 0; // number of drone larvae that developed into pupae today
 				int NewDrones = 0;
 				int NewDrones_healthy = 0;
 				int NewForagerSquadronsHealthy = 0;
@@ -120,9 +118,8 @@ namespace My {
 					// on current day (calculated after MiteFall!)
 				UINT newWorkerEggs = 0; // number of worker eggs laid today
 				UINT newWorkerLarvae = 0; // number of worker eggs that developed into larvae today
-				int NewWorkerPupae = 0;
+				UINT newWorkerPupae = 0; // number of worker larvae that developed into pupae today
 				int PATCHCOLOR = 0;
-				int PhoreticMites = 0;	 // all phoretic mites, healthy and infected
 				int PhoreticMitesHealthyRate = 0;
 				int POLLEN_DANCE_FOLLOWERS = 0;
 				int POLLEN_STORE_INIT = 0;

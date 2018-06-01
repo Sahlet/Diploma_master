@@ -107,7 +107,7 @@ globals [
   NectarFlightsToday
   NewDroneEggs // newDroneEggs in c++
   NewDroneLarvae // newDroneLarvae in c++
-  NewDronePupae
+  NewDronePupae // newDronePupae in c++
   NewDrones
   NewDrones_healthy
   NewForagerSquadronsHealthy
@@ -120,7 +120,7 @@ globals [
     ; on current day (calculated after MiteFall!)
   NewWorkerEggs // newWorkerEggs in c++
   NewWorkerLarvae // newWorkerLarvae in c++
-  NewWorkerPupae
+  NewWorkerPupae // newWorkerPupae in c++
   PATCHCOLOR
   PhoreticMites   ; all phoretic mites, healthy and infected
   PhoreticMitesHealthyRate
